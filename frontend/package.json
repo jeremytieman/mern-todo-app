@@ -1,6 +1,9 @@
 {
-  "name": "mern-todo-app",
+  "name": "mern-todo-app-frontend",
+  "author": "Jeremy Tieman",
+  "license": "MIT",
   "version": "0.1.0",
+  "repository": "github:jeremytieman/mern-todo-app",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
