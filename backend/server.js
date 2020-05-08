@@ -5,12 +5,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 let Todo = require('./todo.model');
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/todos';
 
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/todos', { useNewUrlParser: true });
+mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
