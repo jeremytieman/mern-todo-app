@@ -1,4 +1,32 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). It is a todo app created using React, Express, and MongoDB.
+There are three components, MongoDB, the Express backend, and the React frontend.
+
+## MongoDB
+
+This was tested using the MongoDB Docker image. In order to launch the container, a data directory must be created first. Once created, launch the container:
+
+`docker run -it -v /data/dir:/data/db -p 27017:27017 --name mongodb -d mongo`
+
+Once the container is running, connected to the container:
+
+`docker exec -it mongodb bash`
+
+Once connected to the container, run `mongo` and create the database `use todos` then type `exit`.
+At this point, the MongoDB container is fully set up.
+
+## Backend
+
+To run the backend in development, change to the backend directory and run:
+
+`nodemon server`
+
+To run in production, change to the backend directory and run:
+
+`NODE_ENV=production node server.js`
+
+## Frontend
+
+Change to the frontend directory, and follow the below steps.
 
 ## Available Scripts
 
