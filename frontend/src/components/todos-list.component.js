@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = process.env.API_URL || 'http://localhost:4000/';
+
 const Todo = props => (
   <tr>
     <td className={props.todo.todo_completed ? 'completed' : ''}>{props.todo.todo_description}</td>
@@ -20,7 +22,7 @@ export default class TodosList extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:4000/todos/')
+    axios.get(API_URL + 'todos/')
       .then(response => {
         this.setState({ todos: response.data });
       })
