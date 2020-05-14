@@ -3,11 +3,14 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+
 let Todo = require('./todo.model');
 
 const PORT = process.env.PORT || 4000;
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/todos';
 
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
