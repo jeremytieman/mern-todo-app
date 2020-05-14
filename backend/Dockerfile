@@ -3,7 +3,7 @@ ENV NODE_ENV production
 ARG port_arg=4000
 ENV PORT ${port_arg}
 WORKDIR /usr/src/app
-COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+COPY package*.json ./
 RUN npm install --production --silent
 COPY . .
 EXPOSE ${port_arg}
