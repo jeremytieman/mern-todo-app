@@ -151,12 +151,14 @@ At this point, the entire application is up and running. You can open a web brow
 
 ## Docker Compose
 
-Rather than attempt to run all the Docker containers individual, you can simply use Docker Compose. In one terminal, run:
+Rather than attempt to build all the Docker containers individually, you can simply run:
 
-`docker-compose up`
+`docker-compose build`
 
-This will create all necessary Docker resources and start the containers. In order to stop the containers, in another terminal run:
+To launch all the containers, you can simply run:
+
+`docker-compose up -d`
+
+This will create all necessary Docker resources and start the containers. In order to stop the containers, run:
 
 `docker-compose down`
-
-In the first terminal, you will see the output as the containers stop running.
