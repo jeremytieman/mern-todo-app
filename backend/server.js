@@ -16,7 +16,17 @@ app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true });
+var connectWithRetry = function() {
+  return mongoose.connect(MONGO_URL, { useNewUrlParser: true }, function(err) {
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+      setTimeout(connectWithRetry, 5000);
+    }
+  });
+};
+connectWithRetry();
+
+//mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 const connection = mongoose.connection;
 
 connection.once('open', function() {
@@ -28,7 +38,7 @@ const todoRoutes = express.Router();
 todoRoutes.route('/').get(function(req, res) {
   Todo.find(function(err, todos) {
     if (err) {
-      console.log(err);
+      console.error(err);
     } else {
       res.json(todos);
     }

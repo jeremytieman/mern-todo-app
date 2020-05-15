@@ -32,7 +32,7 @@ export default class EditTodo extends Component {
         });
       })
       .catch(function(error) {
-        console.log(error);
+        console.error(error);
       });
   }
 
@@ -68,8 +68,7 @@ export default class EditTodo extends Component {
       todo_priority: this.state.todo_priority,
       todo_completed: this.state.todo_completed
     };
-    axios.post(API_URL + 'todos/update/' + this.props.match.params.id, obj)
-      .then(res => console.log(res.data));
+    axios.post(API_URL + 'todos/update/' + this.props.match.params.id, obj);
     this.props.history.push('/');
   }
 
