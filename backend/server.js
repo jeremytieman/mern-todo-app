@@ -16,18 +16,33 @@ app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
+let connectRetries = 0;
+
 var connectWithRetry = function() {
-  return mongoose.connect(MONGO_URL, { useNewUrlParser: true }, function(err) {
+  return mongoose.connect(MONGO_URL, { useNewUrlParser: true }).catch(function(err) {
     if (err) {
+      let errorMsg = 'Failed to connect to mongo on startup - ';
+
+      if (connectRetries > 5) {
+        errorMsg += 'Retries exceeding - exiting...'
+        console.error(errorMsg, err);
+        process.exit(-1);
+      }
+
       console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+      connectRetries += 1;
       setTimeout(connectWithRetry, 5000);
     }
   });
 };
+
 connectWithRetry();
 
-//mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 const connection = mongoose.connection;
+
+connection.on('error', err => {
+  console.error('Lost connection with Mongo', err);
+});
 
 connection.once('open', function() {
   console.log("MongoDB database connection established successfully");
