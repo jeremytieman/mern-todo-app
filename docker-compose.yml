@@ -1,0 +1,55 @@
+version: "3.8"
+
+networks:
+  todo:
+    name: todo
+    ipam:
+      config:
+        - subnet: "192.168.0.0/16"
+
+volumes:
+  mongoconfig:
+    name: mongoconfig
+  mongodata:
+    name: mongodata
+
+services:
+  mongodb:
+    container_name: todo-mongodb
+    image: mongo
+    networks:
+      todo:
+        ipv4_address: 192.168.0.100
+    volumes:
+      - mongoconfig:/data/configdb
+      - mongodata:/data/db
+
+  backend:
+    build:
+      context: ./backend
+    container_name: todo-backend
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URL: mongodb://mongo:27017/todos
+    extra_hosts:
+      - "mongo:192.168.0.100"
+    image: todo-backend-image
+    networks:
+      - todo
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: todo-frontend
+    depends_on:
+      - mongodb
+      - backend
+    image: todo-frontend-image
+    networks:
+      - todo
+    ports:
+      - "8000:80"
+    

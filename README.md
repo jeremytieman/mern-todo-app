@@ -85,13 +85,14 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 ## Docker Deploy
 
 The project contains Dockerfiles to create backend and frontend containers. In order to set up the entire system, two Docker elements must be set up first.
-First, for the MondoDB Docker image, you must set up a volume for Mongo to store the data:
+First, for the MondoDB Docker image, you must set up two volumes for Mongo to store its data:
 
 `docker volume create mongodata`
+`docker volume create mongoconfig`
 
 Next, the system should reside within its own network:
 
-`docker network create --subnet=192.168.0.0/16 todo-network`
+`docker network create --subnet=192.168.0.0/16 todo`
 
 ### MongoDB
 
@@ -101,7 +102,7 @@ Pull down the Docker MongoDB image:
 
 Next, launch the container:
 
-`docker run -it -v mongodata:/data/db -p 27017:27017 --name mongodb --net todo-network --ip 192.168.0.100 -d mongo`
+`docker run -it -v mongoconfig:/data/configdb -v mongodata:/data/db --name todo-mongodb --net todo --ip 192.168.0.100 -d mongo`
 
 Once the container is running, connected to the container:
 
@@ -122,13 +123,13 @@ Should you wish to change the port the service runs on, you can pass a port argu
 
 To run the container, you'll have to provide the URL to the MongoDB container:
 
-`docker run -it -p 4000:4000 --name todo-backend --net todo-network --ip 192.168.0.101 -e MONGO_URL=mongodb://192.168.0.100:27017/todos -d todo-backend-image`
+`docker run -it -p 4000:4000 --name todo-backend --net todo --add-host=mongo:192.168.0.100 -e MONGO_URL=mongodb://mongo:27017/todos -d todo-backend-image`
 
 ### Frontend
 
 In order to build the frontend Docker image, you must build the frontend first:
 
-`npm run build`
+`npm run build` or `yarn build`
 
 Should you wish to change the API url, you can set the REACT_APP_API_URL environment variable while building the frontend. On *nix:
 
@@ -144,6 +145,18 @@ Now you can build the frontend Docker image:
 
 To run the container:
 
-`docker run -it -p 8000:80 --name todo-frontend --net todo-network --ip 192.168.0.102 -d todo-frontend-image`
+`docker run -it -p 8000:80 --name todo-frontend --net todo -d todo-frontend-image`
 
 At this point, the entire application is up and running. You can open a web browser and navigate to http://localhost:8000/ and see the site.
+
+## Docker Compose
+
+Rather than attempt to run all the Docker containers individual, you can simply use Docker Compose. In one terminal, run:
+
+`docker-compose up`
+
+This will create all necessary Docker resources and start the containers. In order to stop the containers, in another terminal run:
+
+`docker-compose down`
+
+In the first terminal, you will see the output as the containers stop running.
